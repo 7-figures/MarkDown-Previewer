@@ -1,63 +1,58 @@
 import { useState } from 'react'
-import quotes from './assets/Quotes.json';
-import './App.css';
-import { FaTwitter,FaQuoteLeft,FaQuoteRight, FaTumblr } from "react-icons/fa";
+import './App.css'
+import ReactMarkdown from 'react-markdown'
 
-interface Quote {
-  quote: string;
-  author: string;
-}
-const getRandomQuote = (): Quote =>{
-  return quotes[Math.floor(Math.random() * quotes.length)]
-}
-const getRandomColor =(): string =>{
-const colors =[
-  "#16a085",
-  "#27ae60",
-  "#2c3e50",
-  "#f39c12",
-  "#e74c3c",
-  "#9b59b6",
-  "#f86964",
-  "#342224",
-  "#472e32",
-  "#bd0b99",
-  "#77b1a9",
-  "#73a857",
-];
-return colors[Math.floor(Math.random()* colors.length)]
-}
-function App() {
-  const [quote, setQuote] = useState<Quote>(getRandomQuote());
-  const [newColor, setNewColor] = useState<string>(getRandomColor());
-  const newQuote = () =>{
-    setQuote(getRandomQuote)
-    setNewColor(getRandomColor)
+
+// defaultMarkdown contains valid markdown that represents at least one of each of the following elements: a header (H1 size), a sub header (H2 size), a link, inline code, a code block, a list item, a blockquote, an image, and bolded text
+const defaultMarkdown = `
+# Welcome to my React Markdown Previewer!
+
+## This is a sub-heading...
+### And here's some other cool stuff:
+
+Heres some code, \`<div></div>\`, between 2 backticks.
+
+\`\`\`
+// this is multi-line code:
+
+function anotherExample(firstLine, lastLine) {
+  if (firstLine == '\`\`\`' && lastLine == '\`\`\`') {
+    return multiLineCode;
   }
+}
+\`\`\`
+
+You can also make text **bold**... whoa!
+Or _italic_.
+Or... **_both!_**
+
+There's also [links](https://www.freecodecamp.com), and
+> Block Quotes!
+
+![React Logo w/ Text](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png)
+
+- And of course there are lists.
+  - Some are bulleted.
+      - With different indentation levels.
+        - That look like this.
+`;
+
+function App() {
+ const [markDownText, setMarkDownText] = useState<string>(defaultMarkdown);
 
   return (
-   <div className='background' style={{backgroundColor: newColor,transition:'step-start'}}>
-    <div id= 'quote-box'> 
-    <div id='quote-content'>
-      <FaQuoteLeft size="30px" style={{margin:'10px',color: newColor}}/>
-      <h1 id='text' style={{color: newColor}}>{quote.quote}</h1>
-      <FaQuoteRight size="30px" style={{margin:'10px',color: newColor}}/>
-      <h4 id='author' style={{color: newColor}}> - {quote.author}</h4>
+  <>
+<div>
+  <h1 style={{textAlign:'center'}}>Markdown Previewer</h1>
+  <div className='box-container'>
+    <textarea name='editor' id='editor' value={markDownText} onChange={(e)=>setMarkDownText(e.target.value)}></textarea>
+    <div id='previewer'></div>
+<div id='preview'>
+    <ReactMarkdown>{markDownText}</ReactMarkdown>
     </div>
-    <div className='icons' >
-      <div  className='btn'>
-      <a href='https://twitter.com/Ramy_008' target='blank' style={{backgroundColor:newColor,marginRight:'10px',transition:'20px'}}
-      ><FaTwitter color='white'/></a>
-   
-      <a href='https://www.tumblr.com/uncensoredgists-blog' target='blank'  style={{backgroundColor:newColor,marginRight:'10px'}}
-      ><FaTumblr color='white'/></a></div>
-      
-      <button style={{backgroundColor: newColor}}id='new-quote'  onClick={newQuote}>
-        get a new quote
-      </button>
-    </div>
-    </div>
-   </div>
+  </div>
+</div>
+  </>
   )
 }
 
